@@ -1,0 +1,70 @@
+# Python implementation for 
+# D'Esopo-Pape algorithm 
+
+from collections import defaultdict, deque 
+
+def desopo(graph): 
+	# Number of vertices in graph 
+	v = len(graph) 
+	
+	# Adjacency list of graph 
+	adj = defaultdict(list) 
+	for i in range(v): 
+		for j in range(i + 1, v): 
+			if graph[i][j] != 0: 
+				adj[i].append( 
+					[graph[i][j], j] 
+				) 
+				adj[j].append( 
+					[graph[i][j], i] 
+				) 
+	
+	
+	# Queue to store unoperated vertices 
+	q = deque([]) 
+	
+	# Distance from source vertex 
+	distance =[float('inf')]*v 
+	
+	# Status of vertex 
+	is_in_queue =[False]*v 
+	
+	# let 0 be the source vertex 
+	source = 0
+	distance= 0
+	q.append(source) 
+	is_in_queue= True
+	
+	while q: 
+		# Pop from front of the queue 
+		u = q.popleft() 
+		is_in_queue[u]= False
+	
+		# scan adjacent vertices of u 
+		for e in adj[u]: 
+			# e <- [weight, vertex] 
+			if distance[e[1]] > distance[u]+e[0]: 
+				distance[e[1]]= distance[u]+e[0] 
+				if is_in_queue[e[1]]== False: 
+					# if e[1] is entering 
+					# first time in the queue 
+					if distance[e[1]]== float('inf'): 
+						# Append at back of queue 
+						q.append(e[1]) 
+					else: 
+						# Append at front of queue 
+						q.appendleft(e[1]) 
+					is_in_queue[e[1]] = True
+	return distance 
+
+
+# Driver Code 
+if __name__ == "__main__": 
+	# Adjacency matrix of graph 
+	graph = [[0, 4, 0, 0, 8], 
+			[0, 0, 8, 0, 11], 
+			[0, 8, 0, 2, 0], 
+			[0, 0, 2, 0, 1], 
+			[8, 11, 0, 1, 0] 
+			] 
+	print(desopo(graph)) 
